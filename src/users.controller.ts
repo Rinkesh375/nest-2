@@ -1,15 +1,57 @@
-import { Controller, Get,Post,Put,Patch,Delete, Req, HttpCode } from "@nestjs/common";
+import { Controller, Get, Post, Put, Patch, Delete, Req, HttpCode, Param, Query,Headers} from "@nestjs/common";
 import { Request } from "express";
 
-@Controller("/users")
+
+interface ParamsType {
+    id: String
+}
+
+interface QueryType {
+    name: string;
+    price: string
+}
+
+@Controller("/users/:id")
 export class UsersController {
 
-    @Get("/profile")
-    @HttpCode(200) //Even though nest-js by default pass the stauts code for get,post,put,patch,delete but you pass your custom httpcode too for get,put,patch etc;
-    getProfile(@Req() req:Request){
-        // console.log(req.params)
-        return new Promise((resolve,reject)=>{
+    @Get()
+    getProfile(@Param() param: ParamsType) {
+        console.log(param)
+        return new Promise((resolve, reject) => {
             resolve("Rinkesh")
         })
     }
+}
+
+
+
+
+// @Controller("/products")
+// export class ProductsController{
+//     @Get()
+//     getProduct(@Query() query:QueryType /*This query won't do strict query type check even you can skip or pass any other query too apart from name ,price query */){
+//         console.log(query)
+//         return {product:"Product found"}
+//     }
+// }
+
+
+
+
+@Controller("/products")
+
+export class ProductsController {
+
+    @Get()
+
+    getProduct(@Headers() headers:any) {
+
+        console.log(headers)
+        return { product: "Product found" }
+
     }
+
+}
+
+
+
