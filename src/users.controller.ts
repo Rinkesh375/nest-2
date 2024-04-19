@@ -1,46 +1,39 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CreateUserDTO } from "./dto";
-const USERS = [
-    {
-        "name": "Niti",
-        "age": 25,
-        "id": 1
-    },
-    {
-        "name": "Nitis",
-        "age": 25,
-        "id": 2
-    },
-    {
-        "name": "Nitish",
-        "age": 25,
-        "id": 3
-    }
-];
+import { UsersService } from "./users.service";
+
 
 
 @Controller("/users")
-export class UserController{
-    @Get()
-    getAllUsers(){
-        return USERS
-    }
-
+export class UsersController{
+    constructor(private readonly usersService:UsersService){} // here this will check whether app.module has UsersService or not if it has that will added which we can use
     @Post()
-    createNewUser(@Body() createUserDto:CreateUserDTO){
-       USERS.push(createUserDto)
-       return {msg:"New User created Successfully"}
+    createUser(@Body() user:CreateUserDTO){
+        this.usersService.addUser(user);
+        return {message:"New User Created Successfully"}
     }
 
-    @Get(":id")
-    @HttpCode(404)
-    getSingleUser(@Param() param:{id:string}){
-        const user = USERS.find((user)=>user.id === +param.id)
-        if(!user) return {msg:"No user find by this id"}
-        return user;
+    @Get()
+    findAllUsers(){
+       return  this.usersService.getUsers();
     }
+
+    @Get('/:id')
+    findUser(@Param() param:{id:string}){
+        return this.usersService.getUser(+param.id)
+
+    }
+    @Put("/:id")
+    updateUser(@Param() param:{id:string},@Body() user:CreateUserDTO){
+              this.usersService.updateUser(+param.id,user)
+              return {message:"User Updated"}
+    }
+
+    @Delete("/:id")
+    deleteUser(@Param() param:{id:string}){
+            this.usersService.deleteUser(+param.id);
+            return {message:"User Deleted Successfully"}
+    }
+ 
+
 }
-
-
-
-
