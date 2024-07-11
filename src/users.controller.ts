@@ -3,7 +3,6 @@ import { CreateUserDTO } from "./dto";
 import { UsersService } from "./users.service";
 
 
-
 @Controller("/users")
 export class UsersController{
     constructor(private readonly usersService:UsersService){} // here this will check whether app.module has UsersService or not if it has that will added which we can use
